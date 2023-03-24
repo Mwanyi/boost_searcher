@@ -1,37 +1,112 @@
-# boost_searcher
+## 基于Boost的搜索引擎
 
-#### 介绍
-自我实现的boost库内的搜索引擎
+### 项目简介
 
-#### 软件架构
-软件架构说明
+这是一个基于Boost的站内搜索引擎，通过输入关键字可以实现该关键字在Boost官网内的搜索，可以点击标题跳转到官网对应界面
 
+### 技术栈和环境
 
-#### 安装教程
+- 技术栈：C/C++，C++11，STL，准标准库boost，Jsoncpp，cppjieba，cpp-httplib
+- 环境：Centos 7服务器，vim，gcc，Makefile，vscode
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### 文件结构
 
-#### 使用说明
+boost_searcher
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+| -- data
 
-#### 参与贡献
+​		| -- input 未处理的boost网页的数据源
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+​			-- untag_html
 
+​				| -- untag.txt 存储去标签后的文档内容，每一个网页以【标题\3内容\3URL】的方式连接
 
-#### 特技
+  -- debug.cpp 用于测试debug用
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+  -- dir_tool 用到的库文件
+
+​      | -- boost_1_81_0  下载的boost官网库，用于提取数据源
+
+​			 cpp-httplib-v0.7.15 httplib库，可以用于建立服务端
+
+​			 cppjieba 用于分词的库
+
+​			  demo.cpp 分词库cppjieba的使用示范
+
+  -- http_server.cpp http服务器连接
+
+  -- index.hpp 建立正排索引和倒排索引
+
+| -- log 存储日志信息
+
+​	   | -- log.txt 存储日志信息
+
+  -- log.hpp 日志头文件
+
+  -- Makefile
+
+  -- nohup.out
+
+  -- parser.cpp 对原始数据进行去标签和数据清洗工作
+
+  -- searcher.hpp 搜索，在索引中搜索关键词对应的文档编号，根据权重倒排进行显示
+
+  -- util.hpp 工具类头文件
+
+   -- wwwroot 用于前端界面设置
+	  |-- index.html
+`	  -- nohup.out
+
+### 运行方法
+
+- 进入boost_searcher文件后，先进行编译
+
+  ```shell
+  make
+  ```
+
+- 运行parser进行去标签和数据清洗操作
+
+  ```shell
+  ./parser
+  ```
+
+- 启动服务器，这里我设置使用8081号端口，开始构建索引，该部分会较慢
+
+  ```shell
+  ./http_server
+  ```
+
+  此时可以查看是否已经开启
+
+  ```shell
+  netstat -nltp
+  ```
+
+- 开启服务器后，可在网页输入【本机ip号:端口号】访问网页
+
+- 即可在页面输入关键字进行查找，并且点击标题可以跳转到Boost对应官网
+
+### 注意事项
+
+1. cpp-httplib在使用的时候需要使用较新版本的gcc，而centos 7下默认的版本是gcc 4.8.5，因此需要更新到gcc 7，这里提供一种更新方法：
+
+   - 安装scl
+
+     ```shell
+     sudo yum install centos-release-scl scl-utils-build
+     ```
+
+   - 安装新版本gcc
+
+     ```shell
+     sudo yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++
+     ls /opt/rh
+     ```
+
+   - 启动
+
+     ```shell
+     scl enable devtoolset-7 bash    // 只在本次会话有效
+     vim ~/.bash_profile             // 将上面的语句加入到此文件中即可，每次登录都有效
+     ```
