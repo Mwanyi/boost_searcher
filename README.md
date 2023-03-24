@@ -77,7 +77,7 @@ boost_searcher
   ./http_server
   ```
 
-  此时可以另开一个服务器查看是否已经开启
+  此时可以查看是否已经开启
 
   ```shell
   netstat -nltp
@@ -87,3 +87,26 @@ boost_searcher
 
 - 即可在页面输入关键字进行查找，并且点击标题可以跳转到Boost对应官网
 
+### 注意事项
+
+1. cpp-httplib在使用的时候需要使用较新版本的gcc，而centos 7下默认的版本是gcc 4.8.5，因此需要更新到gcc 7，这里提供一种更新方法：
+
+   - 安装scl
+
+     ```shell
+     sudo yum install centos-release-scl scl-utils-build
+     ```
+
+   - 安装新版本gcc
+
+     ```shell
+     sudo yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++
+     ls /opt/rh
+     ```
+
+   - 启动
+
+     ```shell
+     scl enable devtoolset-7 bash    // 只在本次会话有效
+     vim ~/.bash_profile             // 将上面的语句加入到此文件中即可，每次登录都有效
+     ```
